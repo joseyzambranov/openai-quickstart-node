@@ -28,10 +28,13 @@ export default async function (req, res) {
   try {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: generatePrompt(animal),
+      prompt: generatePrompt(req.body.animal),
       temperature: 0.6,
+      max_tokens: 100,
     });
+   
     res.status(200).json({ result: completion.data.choices[0].text });
+    console.log(completion.data.choices[0])
   } catch(error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
@@ -49,15 +52,9 @@ export default async function (req, res) {
 }
 
 function generatePrompt(animal) {
-  const capitalizedAnimal =
-    animal[0].toUpperCase() + animal.slice(1).toLowerCase();
-  return `Suggest three names for an animal that is a superhero.
+  return `Eres un asesor de negocios experto con una mente financiera y científica. Respondes al usuario con la verdad directa y dura sin cortesías. Incluyes números duros y explicas tu forma de pensar paso a paso. Te encanta ser concreto y utilizar viñetas. Tu objetivo en la vida es ayudar a que la empresa de tu usuario tenga éxito y hablas español perfecto.
 
-Animal: Cat
-Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
-Animal: Dog
-Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
-Animal: ${capitalizedAnimal}
-Names:`;
+Cliente: ${animal}
+
+Asesor:`;
 }
-
